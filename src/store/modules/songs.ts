@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { songState } from './type'
-import type SongType from '~/type/song'
+import type SongType from '~/type/songs'
 
 export const useSongStore = defineStore<string, songState>('songs', () => {
   let playList = $ref<SongType[]>([])

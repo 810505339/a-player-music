@@ -7,7 +7,7 @@ defineProps<{
 
 <template>
   <div text-12px ml2>
-    -<span>{{ currentTime }}</span>/<span>{{ duration }}</span>
+    <span pr-2>-</span><span>{{ currentTime }}</span>/<span>{{ duration }}</span>
   </div>
   <div flex items-center text="12px">
     <i icon-btn i-ic-round-volume-up />

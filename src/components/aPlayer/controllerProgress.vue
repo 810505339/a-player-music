@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 
 const props = defineProps<{
   percent: number
-  vertical: boolean // 是否是垂直模式
+  vertical?: boolean // 是否是垂直模式
 }>()
 const emits = defineEmits(['update:percent', 'changeAfter'])
 const sliderBar = $ref<HTMLElement | null>(null) // slider bar
@@ -21,8 +21,6 @@ const { isSwiping, distanceX, distanceY } = usePointerSwipe($$(handle), {
       progress = 100
     if (progress <= 0)
       progress = 0
-
-    console.log(progress)
   },
   onSwipeEnd(e: PointerEvent) {
     // 完成拖拽
@@ -61,24 +59,34 @@ const handleClass = $computed(() => {
   return props.vertical ? 'bottom-0 left-[50%] translate-x-[-50%] ' : 'top-[50%]  translate-y-[-50%]'
 })
 
-function handleClick(e: MouseEvent) {
-  const { clientX } = e
-  if (!isSwiping.value)
-    return
-
+function mousedown(e: MouseEvent) {
+  e.stopPropagation()
   if (!sliderBar)
     return
+  const { pageX, pageY } = e
+  const d = props.vertical ? 100 - (pageY - sliderBar.offsetTop) : pageX - sliderBar.offsetLeft
+  const offset = props.vertical ? sliderBar!.offsetHeight : sliderBar!.offsetWidth
 
-  const railRect = sliderBar!.getBoundingClientRect()
-  progress = (clientX - railRect.left) / railRect.width * 100
+  progress = calcProgress(d, offset)
   emits('update:percent', progress)
-  emits('changeAfter', progress)
+  console.log(!isSwiping.value)
+
+  if (!isSwiping.value)
+    emits('changeAfter', progress)
+}
+function calcProgress(d: number, offset: number) {
+  let progress = (d / offset) * 100
+  if (progress >= 100)
+    progress = 100
+  if (progress <= 0)
+    progress = 0
+  return progress
 }
 </script>
 
 <template>
-  <div flex items-center pr2>
-    <div ref="sliderBar" relative bg="gray-200/300" :class="sliderClass" inline-block transition @click="handleClick($event)">
+  <div flex items-center>
+    <div ref="sliderBar" relative bg="gray-200/300" :class="sliderClass" inline-block transition @mousedown.capture.stop="mousedown($event)">
       <div absolute bg-green-500 bottom-0 w-full h-full :style="sliderStyle" />
       <div
         ref="handle" :class="handleClass" h-10px w-10px absolute rounded-full bg-white transition border="~ gray-800" shadow-md

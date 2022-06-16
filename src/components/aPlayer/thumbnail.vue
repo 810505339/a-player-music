@@ -10,8 +10,6 @@ const style = $computed(() => {
 })
 function toggle() {
   currentMusic.value.playing = !currentMusic.value.playing
-  console.log(currentMusic.value.playing)
-
   emit('toggle')
 }
 </script>

@@ -7,7 +7,6 @@ const audio = $ref<HTMLAudioElement | null>(null)
 let allTime = $ref('00:00') // 歌曲总时间
 let curTime = $ref('00:00') // 播放的时间
 let progress = $ref(0) // 进度条
-
 const current = $computed(() => songStore.currentMusic)
 
 function onTimeupdate(e: Event) {
@@ -16,29 +15,34 @@ function onTimeupdate(e: Event) {
   progress = (currentTime / duration * 100)
   curTime = dayjs.unix(currentTime).format('mm:ss')
 }
-// 切换播放
-function toggle() {
-  if (current.playing)
-    play()
-  else
-    pause()
-}
-function play() {
-  audio?.play()
-}
-function pause() {
-  audio?.pause()
-}
 
-function canPlay() {
-  if (!audio)
-    return
-
-  allTime = dayjs.unix(audio.duration as number).format('mm:ss')
+function durationchange() {
+  if (audio)
+    allTime = dayjs.unix(audio.duration).format('mm:ss')
 }
 
 function changeAfter(value: number) {
   audio!.currentTime = (value * audio!.duration / 100)
+  play()
+}
+
+async function play() {
+  await audio!.play()
+  current.playing = true
+}
+
+function pause() {
+  audio!.pause()
+  current.playing = false
+}
+watch(() => current.src, async () => {
+  setTimeout(async () => {
+    await play()
+  }, 0)
+})
+
+function toggle() {
+  current.playing ? play() : pause()
 }
 </script>
 
@@ -55,7 +59,6 @@ function changeAfter(value: number) {
     </div>
   </div>
   <audio
-    ref="audio" name="media" :src="current.src" preload="auto" @timeupdate="onTimeupdate" @canplay="canPlay"
-    @play="play"
+    ref="audio" name="media" :src="current.src" @timeupdate="onTimeupdate" @durationchange="durationchange"
   />
 </template>

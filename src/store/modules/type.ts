@@ -1,4 +1,4 @@
-import type SongType from '~/type/song'
+import type SongType from '~/type/songs'
 export interface songState {
   playing: boolean
   playList: SongType[]
