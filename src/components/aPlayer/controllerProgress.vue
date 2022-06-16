@@ -64,18 +64,18 @@ function mousedown(e: MouseEvent) {
   if (!sliderBar)
     return
   const { pageX, pageY } = e
-  const d = props.vertical ? 100 - (pageY - sliderBar.offsetTop) : pageX - sliderBar.offsetLeft
+  const rect = sliderBar.getBoundingClientRect()
+  const d = props.vertical ? (pageY - rect.top) : pageX - rect.left
   const offset = props.vertical ? sliderBar!.offsetHeight : sliderBar!.offsetWidth
 
-  progress = calcProgress(d, offset)
+  progress = calcProgress(d, offset, props.vertical)
   emits('update:percent', progress)
-  console.log(!isSwiping.value)
 
   if (!isSwiping.value)
     emits('changeAfter', progress)
 }
-function calcProgress(d: number, offset: number) {
-  let progress = (d / offset) * 100
+function calcProgress(d: number, offset: number, vertical: boolean | undefined) {
+  let progress = vertical ? (1 - (d / offset)) * 100 : (d / offset) * 100
   if (progress >= 100)
     progress = 100
   if (progress <= 0)

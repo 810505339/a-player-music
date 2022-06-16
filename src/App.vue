@@ -21,7 +21,6 @@ const songs = [
 <template>
   <main font-sans p="x-4 y-10" text="center gray-700 dark:gray-200">
     <a-player :music="songs" />
-    <controllerProgress v-model:percent="percent" vertical h-100px />
     <Footer />
   </main>
 </template>
