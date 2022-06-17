@@ -3,7 +3,13 @@ defineProps<{
   duration: string
   currentTime: string
 }>()
+const emits = defineEmits<{
+  (e: 'changVolume', value: number): void
+}>()
 const volume = $ref(60)
+function changVolume(value: number) {
+  emits('changVolume', value)
+}
 </script>
 
 <template>
@@ -14,7 +20,7 @@ const volume = $ref(60)
   <div flex items-center relative text="12px">
     <i icon-btn i-ic-round-volume-up class="peer" />
     <div absolute bottom="15px" left-4px h-60px hidden peer-hover:block hover:block>
-      <ControllerProgress v-model:percent="volume" vertical h-60px />
+      <ControllerProgress v-model:percent="volume" vertical h-60px @change-after="changVolume" />
     </div>
 
     <i icon-btn i-ic-round-loop />

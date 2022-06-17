@@ -44,6 +44,10 @@ watch(() => current.src, async () => {
 function toggle() {
   current.playing ? play() : pause()
 }
+function changVolume(value: number) {
+  if (audio)
+    audio.volume = value
+}
 </script>
 
 <template>
@@ -54,7 +58,7 @@ function toggle() {
       <lyric />
       <div flex>
         <controllerProgress v-model:percent="progress" basis-full :duration="allTime" @changeAfter="changeAfter" />
-        <playerIcons :current-time="curTime" :duration="allTime" />
+        <playerIcons :current-time="curTime" :duration="allTime" @chang-volume="changVolume" />
       </div>
     </div>
   </div>
