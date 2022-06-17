@@ -1,10 +1,11 @@
+import type { Ref } from 'vue'
+import type { SongModelType } from './../../type/songs'
 import type SongType from '~/type/songs'
 export interface songState {
-  playing: boolean
-  playList: SongType[]
-  index: number
-  volume: number
-  currentMusic: SongType
+  playList: Ref<SongType[]>
+  index: Ref<number>
+  currentMusic: Ref<SongType>
   init: (playList: SongType[]) => void
   toggle: (index: number) => void
+  modeIIndex: Ref<SongModelType>
 }

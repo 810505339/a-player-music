@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import dayjs from 'dayjs'
 import { useSongStore } from '~/store'
+import { SongModelType } from '~/type/songs'
 
 const songStore = useSongStore()
 const audio = $ref<HTMLAudioElement | null>(null)
@@ -46,6 +47,27 @@ watch(() => current.src, async () => {
 function toggle() {
   current.playing ? play() : pause()
 }
+function ended() {
+  switch (songStore.modeIIndex) {
+    case SongModelType.loop:{
+      const index = songStore.index >= songStore.playList.length + 1 ? 0 : songStore.index + 1
+      songStore.toggle(index)
+      break
+    }
+    case SongModelType.cycle:{
+      audio!.currentTime = 0
+      play()
+      break
+    }
+
+    case SongModelType.shuffle: {
+      const index = Math.floor(Math.random() * (songStore.playList.length))
+      console.log(index)
+      songStore.toggle(index)
+      break
+    }
+  }
+}
 </script>
 
 <template>
@@ -61,8 +83,7 @@ function toggle() {
     </div>
   </div>
   <audio
-    ref="audio" name="media" :src="current.src" :volume="volume" :muted="muted"
-    @timeupdate="onTimeupdate"
-    @durationchange="durationchange"
+    ref="audio" name="media" :src="current.src" :volume="volume" :muted="muted" @timeupdate="onTimeupdate"
+    @durationchange="durationchange" @ended="ended"
   />
 </template>
