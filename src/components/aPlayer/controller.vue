@@ -50,7 +50,7 @@ function toggle() {
 function ended() {
   switch (songStore.modeIIndex) {
     case SongModelType.loop:{
-      const index = songStore.index >= songStore.playList.length + 1 ? 0 : songStore.index + 1
+      const index = songStore.index >= songStore.playList.length - 1 ? 0 : songStore.index + 1
       songStore.toggle(index)
       break
     }
