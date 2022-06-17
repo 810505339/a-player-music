@@ -7,7 +7,7 @@
     <a
       icon-btn i-carbon-logo-github
       rel="noreferrer"
-      href="https://github.com/antfu/vitesse-lite"
+      href="http://github.com/810505339/a-player-music"
       target="_blank"
       title="GitHub"
     />
