@@ -11,12 +11,13 @@ const handle = $ref<HTMLElement | null>(null) // 点点
 let progress = $ref<number>(Number(props.percent)) // 进度条的备份
 // https://vueuse.org/core/usePointerSwipe/#usage
 const { isSwiping, distanceX, distanceY } = usePointerSwipe($$(handle), {
+  threshold: 0, // 临界值默认是50...
   onSwipe(e: PointerEvent) {
     const d = props.vertical ? distanceY.value : -distanceX.value
     const offset = props.vertical ? sliderBar!.offsetHeight : sliderBar!.offsetWidth
     const percent = (d / offset) * 100
-
     progress = Number(props.percent) + percent
+
     if (progress >= 100)
       progress = 100
     if (progress <= 0)
@@ -27,6 +28,7 @@ const { isSwiping, distanceX, distanceY } = usePointerSwipe($$(handle), {
     emits('update:percent', progress)
     emits('changeAfter', progress)
   },
+  pointerTypes: ['mouse', 'touch'],
 }) // 使用
 
 // const { pressed } = useMousePressed({ target: $$(handle) }) // 是否一直按着点点
@@ -86,7 +88,7 @@ function calcProgress(d: number, offset: number, vertical: boolean | undefined) 
 
 <template>
   <div flex items-center>
-    <div ref="sliderBar" relative bg="gray-200/300" :class="sliderClass" inline-block transition @mousedown.capture.stop="mousedown($event)">
+    <div ref="sliderBar" relative bg="gray-200/300" :class="sliderClass" inline-block transition @mousedown="mousedown">
       <div absolute bg-green-500 bottom-0 w-full h-full :style="sliderStyle" />
       <div
         ref="handle" :class="handleClass" h-10px w-10px absolute rounded-full bg-white transition border="~ gray-800" shadow-md

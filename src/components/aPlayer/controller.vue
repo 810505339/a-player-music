@@ -7,6 +7,8 @@ const audio = $ref<HTMLAudioElement | null>(null)
 let allTime = $ref('00:00') // 歌曲总时间
 let curTime = $ref('00:00') // 播放的时间
 let progress = $ref(0) // 进度条
+const volume = $ref(1)// 0-1音量
+const muted = $ref(false)// 是否静音
 const current = $computed(() => songStore.currentMusic)
 
 function onTimeupdate(e: Event) {
@@ -44,10 +46,6 @@ watch(() => current.src, async () => {
 function toggle() {
   current.playing ? play() : pause()
 }
-function changVolume(value: number) {
-  if (audio)
-    audio.volume = value / 100
-}
 </script>
 
 <template>
@@ -58,11 +56,13 @@ function changVolume(value: number) {
       <lyric />
       <div flex>
         <controllerProgress v-model:percent="progress" basis-full :duration="allTime" @changeAfter="changeAfter" />
-        <playerIcons :current-time="curTime" :duration="allTime" @chang-volume="changVolume" />
+        <playerIcons v-model:muted="muted" v-model:volume="volume" :current-time="curTime" :duration="allTime" />
       </div>
     </div>
   </div>
   <audio
-    ref="audio" name="media" :src="current.src" @timeupdate="onTimeupdate" @durationchange="durationchange"
+    ref="audio" name="media" :src="current.src" :volume="volume" :muted="muted"
+    @timeupdate="onTimeupdate"
+    @durationchange="durationchange"
   />
 </template>

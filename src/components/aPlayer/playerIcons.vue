@@ -1,15 +1,27 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   duration: string
   currentTime: string
+  muted: boolean
+  volume: number
 }>()
 const emits = defineEmits<{
-  (e: 'changVolume', value: number): void
+  (e: 'update:volume', value: number): void
+  (e: 'update:muted', value: boolean): void
 }>()
-const volume = $ref(60)
+
+let volume = $ref(props.volume * 100)
+
 function changVolume(value: number) {
-  emits('changVolume', value)
 }
+watchEffect(() => {
+  volume = props.muted ? 0 : props.volume * 100
+})
+
+watch($$(volume), () => {
+  if (!props.muted)
+    emits('update:volume', volume / 100)
+})
 </script>
 
 <template>
@@ -18,7 +30,7 @@ function changVolume(value: number) {
   </div>
 
   <div flex items-center relative text="12px">
-    <i icon-btn i-ic-round-volume-up class="peer" />
+    <i icon-btn :class="props.muted ? 'i-ic-round-volume-off' : 'i-ic-round-volume-up'" class="peer" @click="emits('update:muted', !props.muted)" />
     <div absolute bottom="15px" left-4px h-60px hidden peer-hover:block hover:block>
       <ControllerProgress v-model:percent="volume" vertical h-60px @change-after="changVolume" />
     </div>
