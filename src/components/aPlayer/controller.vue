@@ -46,7 +46,7 @@ function toggle() {
 }
 function changVolume(value: number) {
   if (audio)
-    audio.volume = value
+    audio.volume = value / 100
 }
 </script>
 
