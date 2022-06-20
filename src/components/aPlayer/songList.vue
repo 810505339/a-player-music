@@ -43,7 +43,7 @@ function toggle(index: number) {
 
 .v-enter-active,
 .v-leave-active {
-  transition: all 1s ease-in-out;
+  transition: all 0.5s ease-in-out;
   overflow: hidden;
   max-height: 155px;
 }
