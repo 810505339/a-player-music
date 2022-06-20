@@ -6,6 +6,7 @@ import type SongType from '~/type/songs'
 export const useSongStore = defineStore<string, songState>('songs', () => {
   let playList = $ref<SongType[]>([])
   let index = $ref(0)// 所选的音乐index用于切换
+  const isOpen = $ref(false) // 是否打开list
   const modeIndex = $ref<SongModelType>(SongModelType.loop)// 播放model模式
   let currentMusic = $ref<SongType>({
     title: '',
@@ -37,5 +38,6 @@ export const useSongStore = defineStore<string, songState>('songs', () => {
     init,
     toggle,
     modeIIndex: $$(modeIndex),
+    isOpen: $$(isOpen),
   }
 })

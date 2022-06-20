@@ -8,4 +8,5 @@ export interface songState {
   init: (playList: SongType[]) => void
   toggle: (index: number) => void
   modeIIndex: Ref<SongModelType>
+  isOpen: Ref<boolean>
 }

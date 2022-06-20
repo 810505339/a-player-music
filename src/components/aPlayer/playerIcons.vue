@@ -46,7 +46,7 @@ watch($$(volume), () => {
     <i icon-btn :class="modelList[store.modeIIndex]" @click="changeMode" />
     <!--  i-ic-round-shuffle   随机 -->
     <!-- i-ic-twotone-replay  单曲 -->
-    <i icon-btn i-ic-round-menu-open />
+    <i icon-btn :class="store.isOpen ? 'i-ic-round-menu-open' : 'i-ic-round-menu'" @click="store.isOpen = !store.isOpen" />
     <!--  <i icon-btn round-menu> -->
   </div>
 </template>
