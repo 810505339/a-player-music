@@ -10,7 +10,7 @@ function toggle(index: number) {
 
 <template>
   <Transition tag="div" mode="out-in" appear>
-    <div v-show="store.isOpen" h-max-155px>
+    <div v-show="store.isOpen">
       <div
         v-for="(song, index) in store.playList" :key="index" border=" t-1  #efefef" flex items-center text-sm px15px
         py5px cursor-pointer hover:bg="#efefef" relative :class="!song.playing || `bg-#efefef`" overflow-hidden
@@ -48,8 +48,7 @@ function toggle(index: number) {
   max-height: 155px;
 }
 
-  .v-enter,
-.v-leave-to {
+.v-leave-to,   .v-enter-from{
 opacity: 0;
   max-height: 0;
 }
